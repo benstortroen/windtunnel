@@ -8,7 +8,7 @@ services:
     privileged: true
     restart: unless-stopped
     command: python3 tachometer.py
-    profiles: ["windtunnel"]
+    profiles: ["windtunnel", "windtunnel-4"]
 
   barometer:
     build: .

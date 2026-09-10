@@ -57,7 +57,7 @@ def check_status():
     row = cursor.fetchone()
     rpm = row[0] if row else 0
     timestamp = row[1] if row else 0
-    # Determine if rpm is outdated
+    # Determine if rpm is outdated (>10 seconds ago)
     is_within_ten_seconds = False
     if row:
         timestamp_epoch = timestamp.timestamp()

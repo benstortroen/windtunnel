@@ -18,7 +18,7 @@ const MIN_METRIC : Record<string, number> = {
 
 const MAX_METRIC : Record<string, number> = {
     "RPM": 1000,
-    "Air Speed": 100,
+    "Air Speed": 50,
     "Temp": 35,
     "Pressure": 1000
 }
