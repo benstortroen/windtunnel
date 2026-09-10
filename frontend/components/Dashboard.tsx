@@ -31,7 +31,7 @@ const PRESSURE_UNITS = [
 
 export default function Dashboard() {
     // update sensor values using api function (aka hook)
-    const { rpm, rpm_ts, airSpeed, airSpeed_ts, temp, temp_ts, pressure, pressure_ts} = useSensorData();
+    const { rpm, rpm_ts, airSpeed, airSpeed_ts, temp, temp_ts, pressure, pressure_ts, status, status_ts} = useSensorData();
 
 return (
     // display Dashboard as grid of cards
@@ -41,7 +41,7 @@ return (
 
         <div className="grid grid-cols-2 gap-4 p-4 flex-1">
             {/* Wind Tunnel Running Status */}
-            <Card className="col-span-2 lg:col-span-1"><StatusBox /></Card>
+            <Card className="col-span-2 lg:col-span-1"><StatusBox value={status} ts={status_ts}/></Card>
 
             {/* Historical Data Chart */}
             <Card className="col-span-2 lg:col-span-1 min-h-[375px] pb-8"><ChartContainer/></Card>

@@ -12,6 +12,8 @@ interface SensorData {
   temp_ts: string;
   pressure: number;
   pressure_ts: string;
+  status: string;
+  status_ts: string;
 }
 
 export function useSensorData(): SensorData {
@@ -24,6 +26,8 @@ export function useSensorData(): SensorData {
     temp_ts: "",
     pressure: 0,
     pressure_ts: "",
+    status: "Off",
+    status_ts: "",
   });
 
   // determine which table prefix to use based on url
@@ -32,6 +36,7 @@ export function useSensorData(): SensorData {
       ? "open"
       : "closed";
 
+  // call API every 1 second refresh sensor data
   useEffect(() => {
     const interval = setInterval(async () => {
       const res = await fetch(`/api/sensors?prefix=${prefix}`);
