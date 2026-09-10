@@ -3,11 +3,12 @@
 :root[data-theme="light"] {
   --background: var(--color-neutral-100);
   --foreground: var(--color-neutral-600);
+  --primary: var(--color-indigo-400);
+  --secondary: var(--color-amber-400);
   --title: var(--color-gray-500);
   --card: #ffffff;
   --gauge-start: #C0C0DB;
   --gauge-stop: #C0C0DB;
-  --primary: var(--color-indigo-400);
   --button: var(--color-indigo-400);
   --button-selected: var(--color-indigo-500);
   --button-unit: var(--color-neutral-600);
@@ -22,11 +23,12 @@
 :root[data-theme="dark"] {
   --background: var(--color-neutral-900);
   --foreground: var(--color-neutral-100);
+  --primary: var(--color-indigo-400);
+  --secondary: var(--color-amber-500);
   --title: var(--color-gray-500);
   --card: var(--color-neutral-800);
   --gauge-start: #6F6EA0;
   --gauge-stop: #C0C0DB;
-  --primary: var(--color-indigo-400);
   --button: var(--color-indigo-400);
   --button-selected: var(--color-indigo-500);
   --button-unit: var(--color-zinc-700);
@@ -42,11 +44,12 @@
 :root[data-theme="umn"] {
   --background: var(--color-neutral-100);
   --foreground: var(--color-neutral-600);
+  --primary: #900021;
+  --secondary: #ffcc33;
   --title: var(--color-gray-500);
   --card: #ffffff;
   --gauge-start: #ffb71e;
   --gauge-stop: #ffcc33;
-  --primary: #ffcc33;
   --button: #ffcc33;
   --button-selected: #ffb71e;
   --button-unit: #900021;
@@ -61,11 +64,12 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
   --color-title: var(--title);
   --color-card: var(--card);
   --color-gauge-start: var(--gauge-start);
   --color-gauge-stop: var(--gauge-stop);
-  --color-primary: var(--primary);
   --color-button: var(--button);
   --color-button-selected: var(--button-selected);
   --color-button-unit: var(--button-unit);
@@ -74,7 +78,6 @@
   --color-header-border: var(--header-border);
   --color-footer: var(--footer);
   --color-footer-text: var(--footer-text);
-  --color-footer-text-hover: var(--footer-text-hover);
   --color-footer-border: var(--footer-border);
 }
 
