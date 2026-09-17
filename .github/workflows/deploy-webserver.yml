@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |             
-	    cd ~/Projects/windtunnel/frontend
+            cd ~/Projects/windtunnel/frontend
             git pull
             npm install
             npm run build
