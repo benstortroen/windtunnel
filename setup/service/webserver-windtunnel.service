@@ -10,3 +10,10 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
+
+# To restart with service with a github action, you must add a sudoers rule to bypass the password
+#   sudo visudo -f /etc/sudoers.d/windtunnel-deploy
+
+# This will open a blank file, insert the following:
+# (make sure to replace the first string with your username!)
+#   put_username_here ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart webserver-windtunnel
