@@ -13,7 +13,7 @@ export default function Footer(){
     
 
     return (
-        <footer className="border-t bg-footer border-footer-border text-footer-text text-sm py-8 mt-auto transition-colors">
+        <footer className="border-t bg-footer border-footer-border text-footer-text text-sm py-8 mt-auto ">
             <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center gap-4 justify-between">
                 {/* Department info text */}
                 <div className="">

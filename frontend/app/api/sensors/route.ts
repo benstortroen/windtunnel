@@ -9,6 +9,8 @@ interface SensorData {
   temp_ts: string;
   pressure: number;
   pressure_ts: string;
+  status: string;
+  status_ts: string;
 }
 
 export async function GET(request: Request) {
@@ -26,9 +28,11 @@ export async function GET(request: Request) {
         temp_ts: "",
         pressure: 0,
         pressure_ts: "",
+        status: "Off",
+        status_ts: "",
     }
 
-    // latest rpm query
+    // RPM Query
     try {
         const result = await pool.query(
             `SELECT rpm, timestamp
@@ -44,7 +48,7 @@ export async function GET(request: Request) {
         // data.rpm stays 0 as fallback
     }
 
-    // latest air speed query
+    // Air Speed Query
     try {
         const result = await pool.query(
             `SELECT air_speed, timestamp
@@ -59,7 +63,7 @@ export async function GET(request: Request) {
         console.error('Failed to fetch latest air speed:', error);
     }
 
-    // latest temperature query
+    // Temperature Query
     try {
         const result = await pool.query(
             `SELECT temp_celsius, timestamp
@@ -74,20 +78,35 @@ export async function GET(request: Request) {
         console.error('Failed to fetch latest temperature:', error);
     }
 
-    // latest pressure query
-        try {
-            const result = await pool.query(
-                `SELECT pressure_hpa, timestamp
-                FROM ${prefix}_barometer
-                ORDER BY timestamp
-                DESC LIMIT 1`
-            );
-            data.pressure = result.rows[0].pressure_hpa;
-            data.pressure_ts = result.rows[0].timestamp;
-        }
-        catch (error) {
-            console.error('Failed to fetch latest pressure:', error);
-        }
+    // Pressure Query
+    try {
+        const result = await pool.query(
+            `SELECT pressure_hpa, timestamp
+            FROM ${prefix}_barometer
+            ORDER BY timestamp
+            DESC LIMIT 1`
+        );
+        data.pressure = result.rows[0].pressure_hpa;
+        data.pressure_ts = result.rows[0].timestamp;
+    }
+    catch (error) {
+        console.error('Failed to fetch latest pressure:', error);
+    }
+
+    // Status Query
+    try {
+        const result = await pool.query(
+            `SELECT status, timestamp
+            FROM ${prefix}_status
+            ORDER BY timestamp
+            DESC LIMIT 1`
+        );
+        data.status = result.rows[0].status;
+        data.status_ts = result.rows[0].timestamp;
+    }
+    catch (error) {
+        console.error('Failed to fetch latest status:', error);
+    }
 
 
 
