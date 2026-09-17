@@ -1,3 +1,4 @@
+[![Update Website](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-webserver.yml/badge.svg)](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-webserver.yml)
 # Wind Tunnel Dashboard
 ### UMN AEM Department Project
 
