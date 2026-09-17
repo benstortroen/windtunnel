@@ -44,7 +44,7 @@
 :root[data-theme="umn"] {
   --background: var(--color-neutral-100);
   --foreground: var(--color-neutral-600);
-  --primary: #900021;
+  --primary: #aaaaaa;
   --secondary: #ffcc33;
   --title: var(--color-gray-500);
   --card: #ffffff;
