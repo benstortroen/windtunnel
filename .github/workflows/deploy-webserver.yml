@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy to web server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rebuild wind tunnel website
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+             
+	    cd ~/Projects/windtunnel/frontend
+            git pull
+            npm install
+            npm run build
+            sudo systemctl restart webserver-windtunnel
+
