@@ -15,8 +15,6 @@ jobs:
       - name: Rebuild docker container and rerun
         uses: appleboy/ssh-action@master
         with:
-          debug: true
-
           # 1. Tailscale server (open to internet) — jump host, runner connects here first
           proxy_host: ${{ secrets.SSH_HOST }}
           proxy_username: ${{ secrets.SSH_USERNAME }}
