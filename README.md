@@ -89,10 +89,10 @@ Install Node.js
 
 # Computer Responsibilities
 
-| Computer Name (not actual hostnames) | Responsibility                                                 | Location                        |
-|--------------------------------------|----------------------------------------------------------------|---------------------------------|
-| homeserver                           | database<br/>nginx web server                                  | My Home                         |
-| raspberrypi                          | closed_tachometer<br/>closed_barometer                         | Closed Return Wind Tunnel Motor |
-| raspberrypi-2                        | closed_pitot-static <br/>closed_thermometer<br/>closed_standby | Closed Return Wind Tunnel Front Panel | 
-| raspberrypi-3                        | open_tachometer<br/>open_barometer                             | Open Return Wind Tunnel Motor |
-| raspberrypi-4                        | N/A                                                            | N/A |
+| Computer Name (not actual hostnames) | Responsibility                                                                       | Location                                   |
+|--------------------------------------|--------------------------------------------------------------------------------------|--------------------------------------------|
+| homeserver                           | database<br/>nginx web server                                                        | My Home                                    |
+| raspberrypi                          | closed_tachometer<br/>                                                               | Closed Return Wind Tunnel Motor            |
+| raspberrypi-2                        | closed_pitot-static <br/>closed_barometer  <br/>closed_thermometer<br/>closed_status | Closed Return Wind Tunnel Front Panel      | 
+| raspberrypi-3                        | open_pitot-static <br/>open_barometer <br/> open_thermometer<br/> open_status        | Open Return Wind Tunnel Computer Equipment |
+| raspberrypi-4                        | open_tachometer                                                                      | Open Return Wind Tunnel Motor              |
