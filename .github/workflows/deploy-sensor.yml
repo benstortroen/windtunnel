@@ -23,18 +23,18 @@ jobs:
 
           - name: raspberrypi-2
             host: SSH_HOST_PI_2
-            profile: windtunnel
-            logs: tachometer barometer
+            profile: windtunnel-2
+            logs: pitot-static thermometer status
 
           - name: raspberrypi-3
             host: SSH_HOST_PI_3
-            profile: open-return
-            logs: tachometer barometer
+            profile: windtunnel-3
+            logs: pitot-static barometer thermometer status
 
           - name: raspberrypi-4
             host: SSH_HOST_PI_4
-            profile: closed-return
-            logs: tachometer barometer
+            profile: windtunnel-4
+            logs: tachometer
 
     steps:
       - name: Deploy sensor containers
