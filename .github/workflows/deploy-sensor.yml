@@ -1,0 +1,41 @@
+name: Update Sensor (Raspberry Pi)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  deploy:
+    name: Deploy to sensor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rebuild docker container and rerun
+        uses: appleboy/ssh-action@master
+        with:
+          # 1. Tailscale server (open to internet) — jump host, runner connects here first
+          proxy_host: ${{ secrets.SSH_HOST }}
+          proxy_username: ${{ secrets.SSH_USERNAME }}
+          proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          proxy_port: 22
+
+          # 2. Sensor / Raspberry Pi (only on tailscale network) — script actually runs here
+          host: ${{ secrets.SSH_HOST_PI_1 }}
+          username: ${{ secrets.SSH_USERNAME_PI }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_PI }}
+          port: 22
+
+          script: |
+            whoami
+            hostname
+            ls -al
+            
+
+          # cd ~/Projects/windtunnel/frontend
+          # git pull
+          # docker compose --profile "windtunnel" build
+          # docker compose --profile "windtunnel" up -d
+          # docker compose logs -f "tachometer"
+
