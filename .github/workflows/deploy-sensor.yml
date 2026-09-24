@@ -19,12 +19,12 @@ jobs:
           - name: raspberrypi-1
             host: SSH_HOST_PI_1
             profile: windtunnel
-            logs: tachometer barometer
+            logs: tachometer
 
           - name: raspberrypi-2
             host: SSH_HOST_PI_2
             profile: windtunnel-2
-            logs: pitot-static thermometer status
+            logs: pitot-static barometer thermometer status
 
           - name: raspberrypi-3
             host: SSH_HOST_PI_3
