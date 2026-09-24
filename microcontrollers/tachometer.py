@@ -115,6 +115,7 @@ last_rpm = 0
 
 try:
     while True:
+        print(" just saying hi ¯\_( ͡° ͜ʖ ͡°)_/¯ ")
         try: 
             rpm = get_rpm() # Receive RPM from Raspberry Pi
 
