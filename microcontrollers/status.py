@@ -6,7 +6,7 @@
 # Three possible status for wind tuneel
 # off ==> No voltage from panel
 # standby ==>  Voltage from panel, rpm == 0
-# running ==>
+# running ==> Voltage from panel, rpm > 0
 
 
 import psycopg2                 # PostgreSQL
@@ -30,9 +30,9 @@ current_status = "Off"
 # Return the online status of the Wind Tunnel with two factors
 # 1) Wind Tunnel Panel voltage
 # 2) The lastest motor rpm
-# Case 1) Off = voltage < 0.1
-# Case 2) Standby = voltage >= 0.1, and rpm = 0
-# Case 3) Running = voltage >= 0.1, and rpm > 0
+# Case 1) Off = voltage <= 1
+# Case 2) Standby = voltage > 1, and (rpm = 0 or latest rpm is older than 10 seconds)
+# Case 3) Running = voltage > 1, and rpm > 0 within the last 10 seconds
 def check_status():
     # Read voltage from analog channel
     raw_value = pcf_in_0.value
@@ -49,19 +49,18 @@ def check_status():
     else:
         TABLE_NAME = "open_tachometer"
 
-    # Fetch latest rpm and timestamp from database
-    sql_select = psycopg2.sql.SQL("SELECT rpm, timestamp FROM {table} ORDER BY timestamp DESC LIMIT 1").format(
+    # Fetch latest rpm and whether it was recorded within the last 10 seconds
+    # (freshness is computed by the database so timezones / Pi clock skew don't matter)
+    sql_select = psycopg2.sql.SQL(
+        "SELECT rpm, (clock_timestamp() - timestamp) BETWEEN interval '0 seconds' AND interval '10 seconds' "
+        "FROM {table} ORDER BY timestamp DESC LIMIT 1"
+    ).format(
         table=psycopg2.sql.Identifier(TABLE_NAME)
     )
     cursor.execute(sql_select)
     row = cursor.fetchone()
     rpm = row[0] if row else 0
-    timestamp = row[1] if row else 0
-    # Determine if rpm is outdated (>10 seconds ago)
-    is_within_ten_seconds = False
-    if row:
-        timestamp_epoch = timestamp.timestamp()
-        is_within_ten_seconds = time.time() - timestamp_epoch < 10
+    is_within_ten_seconds = bool(row[1]) if row else False
 
     # Case 1
     if not is_wind_tunnel_on:
