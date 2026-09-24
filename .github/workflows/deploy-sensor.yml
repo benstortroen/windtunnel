@@ -61,6 +61,9 @@ jobs:
             # Build containers
             docker compose --profile "${{ matrix.profile }}" build
 
+            # Stop all current containers
+            docker compose --profile "*" down
+
             # Start containers
             docker compose --profile "${{ matrix.profile }}" up -d
 
