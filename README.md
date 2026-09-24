@@ -1,4 +1,5 @@
-[![Update Website](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-webserver.yml/badge.svg)](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-webserver.yml)
+[![Website Update](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-webserver.yml/badge.svg)](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-webserver.yml)
+[![Sensor Update](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-sensor.yml/badge.svg)](https://github.com/benstortroen/windtunnel/actions/workflows/deploy-sensor.yml)
 # Wind Tunnel Dashboard
 ### UMN AEM Department Project
 
