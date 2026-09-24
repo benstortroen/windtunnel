@@ -29,11 +29,17 @@ jobs:
           port: 22
 
           script: |
+            # Navigate to project directory
             cd ~/Projects/windtunnel/microcontrollers
             git pull
+            
+            # Rebuild docker container
             docker compose --profile "windtunnel" build
             docker compose --profile "windtunnel" up -d
-            docker compose logs -f tachometer barometer
+            
+            # Spit out sensor logs
+            # Timeout after 5 minutes
+            timeout 5m docker compose logs -f tachometer barometer || true
             
             
 
