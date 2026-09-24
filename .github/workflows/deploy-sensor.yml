@@ -1,4 +1,4 @@
-name: Update Sensor (Raspberry Pi)
+name: Sensor Update
 
 on:
   workflow_dispatch:
@@ -8,40 +8,61 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to raspberrypi-1
+    name: Deploy to ${{ matrix.name }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: raspberrypi-1
+            host: SSH_HOST_PI_1
+            profile: windtunnel
+            logs: tachometer barometer
+
+          - name: raspberrypi-2
+            host: SSH_HOST_PI_2
+            profile: windtunnel
+            logs: tachometer barometer
+
+          - name: raspberrypi-3
+            host: SSH_HOST_PI_3
+            profile: open-return
+            logs: tachometer barometer
+
+          - name: raspberrypi-4
+            host: SSH_HOST_PI_4
+            profile: closed-return
+            logs: tachometer barometer
+
     steps:
-      - name: Rebuild docker container and rerun
+      - name: Deploy sensor containers
         uses: appleboy/ssh-action@master
         with:
-
-          # 1. Tailscale server (open to internet) — jump host, runner connects here first
+          # Tailscale server
           proxy_host: ${{ secrets.SSH_HOST }}
           proxy_username: ${{ secrets.SSH_USERNAME }}
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
           proxy_port: 22
 
-          # 2. Sensor / Raspberry Pi (only on tailscale network) — script actually runs here
-          host: ${{ secrets.SSH_HOST_PI_1 }}
+          # Raspberry Pi
+          host: ${{ secrets[matrix.host] }}
           username: ${{ secrets.SSH_USERNAME_PI }}
           key: ${{ secrets.SSH_PRIVATE_KEY_PI }}
           port: 22
 
           script: |
-            # Navigate to project directory
             cd ~/Projects/windtunnel/microcontrollers
+
+            # Pull latest code
             git pull
-            
-            # Rebuild docker container
-            docker compose --profile "windtunnel" build
-            docker compose --profile "windtunnel" up -d
-            
-            # Spit out sensor logs
-            # Timeout after 5 minutes
-            timeout 5m docker compose logs -f tachometer barometer || true
-            
-            
 
-          
+            # Build containers
+            docker compose --profile "${{ matrix.profile }}" build
 
+            # Start containers
+            docker compose --profile "${{ matrix.profile }}" up -d
+
+            # Watch sensor logs for 5 minutes
+            timeout 5m docker compose logs -f ${{ matrix.logs }} || true

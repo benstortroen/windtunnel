@@ -1,4 +1,4 @@
-name: Update Website
+name: Website Update
 
 on:
   workflow_dispatch:
