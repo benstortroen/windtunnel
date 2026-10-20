@@ -4,7 +4,7 @@ import { ReactNode, useState, useEffect } from "react";
 import Card from "@/components/Card";
 
 const SNAPSHOT_URL = "https://cam.magmac4.com/?action=snapshot";
-const REFRESH_INTERVAL_MS = 5000;
+const REFRESH_INTERVAL_MS = 500; // 2 frames per second
 
 type WebcamProps = {
     children?: ReactNode;
@@ -17,34 +17,45 @@ export default function Webcam({ children }: WebcamProps){
 
     useEffect(() => {
         let cancelled = false;
+        let loading = false;
+        let timeout: ReturnType<typeof setTimeout> | undefined;
 
         // load the next snapshot off-screen and only swap it in once it has
         // finished loading, so the image never flickers or goes blank
         function fetchSnapshot() {
-            // skip while the tab is hidden to avoid pulling frames nobody sees
-            if (document.visibilityState !== "visible") return;
+            // skip while the tab is hidden to avoid pulling frames nobody sees,
+            // and never start a new request while one is still in flight
+            if (cancelled || loading || document.visibilityState !== "visible") return;
+            loading = true;
 
             const src = `${SNAPSHOT_URL}&t=${Date.now()}`;
             const next = new Image();
-            next.onload = () => {
-                if (!cancelled) setSnapshotSrc(src);
+            // only schedule the next snapshot after this one finishes, so slow
+            // connections (mobile) don't pile up overlapping requests
+            next.onload = next.onerror = () => {
+                loading = false;
+                if (cancelled) return;
+                if (next.complete && next.naturalWidth > 0) setSnapshotSrc(src);
+                // on error keep showing the last snapshot, the next tick retries
+                timeout = setTimeout(fetchSnapshot, REFRESH_INTERVAL_MS);
             };
-            // on error keep showing the last snapshot, the next tick retries
             next.src = src;
         }
 
         fetchSnapshot();
-        const interval = setInterval(fetchSnapshot, REFRESH_INTERVAL_MS);
 
-        // grab a fresh snapshot right away when the tab becomes visible again
+        // resume right away when the tab becomes visible again
         function handleVisibility() {
-            if (document.visibilityState === "visible") fetchSnapshot();
+            if (document.visibilityState === "visible") {
+                clearTimeout(timeout);
+                fetchSnapshot();
+            }
         }
         document.addEventListener("visibilitychange", handleVisibility);
 
         return () => {
             cancelled = true;
-            clearInterval(interval);
+            clearTimeout(timeout);
             document.removeEventListener("visibilitychange", handleVisibility);
         };
     }, []);
