@@ -13,8 +13,26 @@ type WebcamProps = {
 export default function Webcam({ children }: WebcamProps){
 
     // changing this key forces the browser to open a new stream connection
-    const [streamKey, setStreamKey] = useState(Date.now());
+    const [streamKey, setStreamKey] = useState(() => Date.now());
     const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // the stream never finishes downloading, so hold it back until the page
+    // has loaded, otherwise the browser shows the page as loading forever
+    const [pageLoaded, setPageLoaded] = useState(false);
+
+    useEffect(() => {
+        function handleLoad() {
+            setPageLoaded(true);
+        }
+
+        if (document.readyState === "complete") {
+            handleLoad();
+            return;
+        }
+
+        window.addEventListener("load", handleLoad);
+        return () => window.removeEventListener("load", handleLoad);
+    }, []);
 
     function reconnect() {
         setStreamKey(Date.now());
@@ -46,9 +64,11 @@ export default function Webcam({ children }: WebcamProps){
     return (
 
         <Card className="col-span-2 lg:col-span-1 relative overflow-hidden min-h-[375px]">
-            <img src={`${STREAM_URL}&t=${streamKey}`} alt="Live camera"
-                 onError={handleError}
-                 className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] rounded-lg object-cover"/>
+            {pageLoaded && (
+                <img src={`${STREAM_URL}&t=${streamKey}`} alt="Live camera"
+                     onError={handleError}
+                     className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] rounded-lg object-cover"/>
+            )}
 
             {/* content overlaid in the top left corner of the stream */}
             <div className="absolute top-0 left-0">
