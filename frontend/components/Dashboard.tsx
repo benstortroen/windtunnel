@@ -42,9 +42,9 @@ return (
 
         <div className="grid grid-cols-2 gap-4 p-4 flex-1">
             {/* Webcam with Wind Tunnel Running Status overlaid */}
-            <Webcam>
-                <Card className="shadow-none"><StatusBox value={status} ts={status_ts}/></Card>
-            </Webcam>
+            {/*<Webcam>*/}
+            {/*    <Card className="shadow-none"><StatusBox value={status} ts={status_ts}/></Card>*/}
+            {/*</Webcam>*/}
 
             {/* Historical Data Chart */}
             <Card className="col-span-2 lg:col-span-1 min-h-[375px] pb-8"><ChartContainer/></Card>
