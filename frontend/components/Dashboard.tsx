@@ -8,6 +8,7 @@ import StatusBox from "@/components/StatusBox";
 import ChartContainer from "@/components/ChartContainer";
 import GaugeCard from "@/components/GaugeCard";
 import DashboardHeader from "@/components/DashboardHeader";
+import Webcam from "@/components/Webcam";
 
 const RPM_UNITS = [
     { label: 'RPM', convert: (v: number) => v, decimalPlaces: 0}
@@ -40,8 +41,10 @@ return (
         <DashboardHeader/>
 
         <div className="grid grid-cols-2 gap-4 p-4 flex-1">
-            {/* Wind Tunnel Running Status */}
-            <Card className="col-span-2 lg:col-span-1"><StatusBox value={status} ts={status_ts}/></Card>
+            {/* Webcam with Wind Tunnel Running Status overlaid */}
+            <Webcam>
+                <Card className="shadow-none"><StatusBox value={status} ts={status_ts}/></Card>
+            </Webcam>
 
             {/* Historical Data Chart */}
             <Card className="col-span-2 lg:col-span-1 min-h-[375px] pb-8"><ChartContainer/></Card>
@@ -59,5 +62,5 @@ return (
             </div>
         </div>
     </div>
-  );
+);
 }

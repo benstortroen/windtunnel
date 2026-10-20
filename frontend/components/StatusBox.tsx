@@ -63,9 +63,9 @@ export default function StatusBox({value, ts} : StatusBoxProps) {
     return (
         <div>
             <p className="text-2xl text-title"> Wind Tunnel Status</p>
-            <p className={`text-4xl md:text-6xl font-bold ${textColor}`}>
+            <p className={`text-4xl font-bold ${textColor}`}>
                 {value}
-                <span className={`inline-block align-middle text-white text-lg mx-2 md:mx-4 ${bgColor} rounded-md p-1 `}>
+                <span className={`inline-block align-middle text-white text-lg mx-2 ${bgColor} rounded-md p-1 `}>
                       {formattedTimeAgo(ts)}
                 </span>
             </p>
