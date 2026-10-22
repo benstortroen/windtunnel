@@ -11,6 +11,9 @@ jobs:
     name: Deploy to ${{ matrix.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    concurrency:
+      group: deploy-${{ matrix.host }}
+      cancel-in-progress: false
 
     strategy:
       fail-fast: false
