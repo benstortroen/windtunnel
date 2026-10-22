@@ -7,9 +7,10 @@ const CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
 
 type WebcamProps = {
     children?: ReactNode;
+    showVideo?: boolean;
 };
 
-export default function Webcam({ children }: WebcamProps) {
+export default function Webcam({ children, showVideo = true }: WebcamProps) {
 
     // Don't start loading the embed until the rest of the page has finished
     // loading, so a slow stream never delays the page's own load event
@@ -27,7 +28,7 @@ export default function Webcam({ children }: WebcamProps) {
     return (
 
         <Card className="col-span-2 lg:col-span-1 relative overflow-hidden min-h-[375px]">
-            {ready && CHANNEL_ID && (
+            {showVideo && ready && CHANNEL_ID && (
                 <iframe
                     src={`https://www.youtube-nocookie.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1&playsinline=1&controls=0&disablekb=1`}
                     title="Wind tunnel camera"
