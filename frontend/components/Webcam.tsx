@@ -29,12 +29,11 @@ export default function Webcam({ children }: WebcamProps) {
         <Card className="col-span-2 lg:col-span-1 relative overflow-hidden min-h-[375px]">
             {ready && CHANNEL_ID && (
                 <iframe
-                    src={`https://www.youtube-nocookie.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1&playsinline=1&modestbranding=1`}
+                    src={`https://www.youtube-nocookie.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1&playsinline=1&controls=0&disablekb=1`}
                     title="Wind tunnel camera"
                     loading="lazy"
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    allowFullScreen
-                    style={{ border: 0 }}
+                    allow="autoplay; encrypted-media"
+                    style={{ border: 0, pointerEvents: "none" }}
                     className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] rounded-lg"
                 />
             )}
