@@ -1,0 +1,19 @@
+[Unit]
+Description=Wind Tunnel Camera -> YouTube Live
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+EnvironmentFile=/etc/windtunnel-camera-stream.env
+WorkingDirectory=/home/ventus/Projects/windtunnel/setup/camera
+ExecStart=/bin/sh /home/ventus/Projects/windtunnel/setup/camera/stream-camera.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+# Setup (see setup/camera/README.md for the full runbook):
+#   2. sudo cp wt-camera-stream.service /etc/systemd/system/
+#   3. sudo systemctl daemon-reload
+#   4. sudo systemctl enable --now wt-camera-stream

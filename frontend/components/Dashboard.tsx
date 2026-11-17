@@ -30,7 +30,11 @@ const PRESSURE_UNITS = [
     { label: 'atm', convert: (v: number) => v / 1013.25, decimalPlaces: 4}
 ];
 
-export default function Dashboard() {
+type DashboardProps = {
+    showWebcam?: boolean;
+};
+
+export default function Dashboard({ showWebcam = false }: DashboardProps) {
     // update sensor values using api function (aka hook)
     const { rpm, rpm_ts, airSpeed, airSpeed_ts, temp, temp_ts, pressure, pressure_ts, status, status_ts} = useSensorData();
 
@@ -41,8 +45,8 @@ return (
         <DashboardHeader/>
 
         <div className="grid grid-cols-2 gap-4 p-4 flex-1">
-            {/* Webcam with Wind Tunnel Running Status overlaid */}
-            <Webcam>
+            {/* Webcam (video only on the closed return) with Wind Tunnel Running Status overlaid */}
+            <Webcam showVideo={showWebcam}>
                 <Card className="shadow-none"><StatusBox value={status} ts={status_ts}/></Card>
             </Webcam>
 
