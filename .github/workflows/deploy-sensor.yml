@@ -83,5 +83,5 @@ jobs:
             # Remove old dangling images left behind by the rebuild
             docker image prune -f
 
-            # Watch sensor logs for 5 minutes
-            timeout 5m docker compose logs -f ${{ matrix.logs }} || true
+            # Watch sensor logs for 1 minute
+            timeout 1m docker compose logs -f ${{ matrix.logs }} || true

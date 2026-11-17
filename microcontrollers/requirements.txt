@@ -7,3 +7,4 @@ adafruit-circuitpython-bmp5xx
 adafruit-circuitpython-pcf8591
 requests
 beautifulsoup4
+gpiod>=2.2.2,<3
