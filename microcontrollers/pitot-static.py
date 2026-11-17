@@ -113,6 +113,7 @@ try:
         except Exception as error:
             print("Error while reading from sensor or inserting to database: ", error)
             connection.rollback()
+            time.sleep(1) # wait before retrying so a failed read doesn't spin and flood the I2C bus
 
 except KeyboardInterrupt:
     print("Stopped by user")
