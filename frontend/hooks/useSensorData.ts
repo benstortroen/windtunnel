@@ -36,15 +36,34 @@ export function useSensorData(): SensorData {
       ? "open"
       : "closed";
 
-  // call API every 1 second refresh sensor data
+  // refresh sensor data: fetch immediately, then 1 second after each response
+  // arrives, so a slow server never causes requests to pile up
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const res = await fetch(`/api/sensors?prefix=${prefix}`);
-      const json: SensorData = await res.json();
-      setData(json);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    let stopped = false;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const controller = new AbortController();
+
+    const poll = async () => {
+      try {
+        const res = await fetch(`/api/sensors?prefix=${prefix}`, { signal: controller.signal });
+        if (res.ok) {
+          const json: SensorData = await res.json();
+          if (!stopped) setData(json);
+        }
+      } catch (err) {
+        if (!stopped) console.error("Failed to fetch sensor data", err);
+      }
+      if (!stopped) timeout = setTimeout(poll, 1000);
+    };
+
+    poll();
+
+    return () => {
+      stopped = true;
+      controller.abort();
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [prefix]);
 
   return data;
 }

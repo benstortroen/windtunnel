@@ -43,48 +43,56 @@ export default function Chart({selectedRange, selectedMetric} : ChartProps) {
       : "closed";
 
 
-    // pull new chart data when selectedRange changes
+    // pull new chart data when selectedRange / selectedMetric changes
     useEffect(() => {
-      // ignore flag is to prevent old data from displaying when user clicks buttons fast
+      // ignore flag prevents old data from displaying when user clicks buttons fast
       let ignore = false;
-      let interval: ReturnType<typeof setInterval> | undefined;
+      let timeout: ReturnType<typeof setTimeout> | undefined;
+      const controller = new AbortController();
 
       // API CALL WITH RANGE AS A SEARCH PARAMETER
       const fetchData = async () => {
           try {
             // get data points from api route, pass selectedRange as a search parameter
-            const res = await fetch(`/api/chart?prefix=${prefix}&range=${selectedRange}&metric=${selectedMetric}`);
+            const res = await fetch(
+              `/api/chart?prefix=${prefix}&range=${selectedRange}&metric=${selectedMetric}`,
+              { signal: controller.signal }
+            );
+            if (ignore) return;
             // error check, zero-out data points
             if (!res.ok) {
               console.error(`Failed to load chart data: ${res.status} ${res.statusText}`);
               setChartData([]);
-              return;
+            } else {
+              // apply new data points to chart
+              const data = await res.json();
+              if (ignore) return;
+              setChartData(data);
+              setChartMin(MIN_METRIC[selectedMetric]);
+              setChartMax(MAX_METRIC[selectedMetric]);
             }
-            // apply new data points to chart
-            const data = await res.json();
-            setChartData(data);
-            setChartMin(MIN_METRIC[selectedMetric]);
-            setChartMax(MAX_METRIC[selectedMetric]);
           }
-            // error check, zero-out data points
-            catch (err) {
+          // error check, zero-out data points
+          catch (err) {
+            if (ignore) return; // aborted because range/metric changed or unmounted
             console.error("Network error fetching chart data", err);
             setChartData([]);
           }
-      };
-      //
-      fetchData();
 
-      // Update live data every 1 second
-      if (selectedRange === "LIVE"){
-        interval = setInterval(fetchData, 1000);
-      }
+          // LIVE: fetch again 1 second after this request finished, so requests never pile up
+          if (!ignore && selectedRange === "LIVE") {
+            timeout = setTimeout(fetchData, 1000);
+          }
+      };
+
+      fetchData();
 
       return () => {
         ignore = true; // runs when selectedRange changes again or component unmounts
-        if (interval) {clearInterval(interval);}
+        controller.abort();
+        if (timeout) {clearTimeout(timeout);}
       };
-    }, [selectedRange, selectedMetric]);
+    }, [prefix, selectedRange, selectedMetric]);
 
     // change timestamp information depending on range length
     function formatTimestamp(t: string, range: string) {
