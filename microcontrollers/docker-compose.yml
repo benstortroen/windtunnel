@@ -1,3 +1,11 @@
+# Cap container logs so the sensors' constant print output doesn't keep
+# writing to (and filling) the Pi SD cards
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "5m"
+    max-file: "2"
+
 services:
   tachometer:
     build: .
@@ -7,6 +15,7 @@ services:
       - .env
     privileged: true
     restart: unless-stopped
+    logging: *default-logging
     command: python3 tachometer.py
     profiles: ["windtunnel", "windtunnel-4"]
 
@@ -17,6 +26,7 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    logging: *default-logging
     command: python3 barometer.py
     profiles: [ "windtunnel-2", "windtunnel-3"]
 
@@ -28,6 +38,7 @@ services:
       - .env
     privileged: true
     restart: unless-stopped
+    logging: *default-logging
     command: python3 pitot-static.py
     profiles: ["windtunnel-2", "windtunnel-3"]
 
@@ -39,6 +50,7 @@ services:
       - .env
     privileged: true
     restart: unless-stopped
+    logging: *default-logging
     command: python3 thermometer.py
     profiles: ["windtunnel-2", "windtunnel-3"]
 
@@ -50,5 +62,6 @@ services:
       - .env
     privileged: true
     restart: unless-stopped
+    logging: *default-logging
     command: python3 status.py
     profiles: [ "windtunnel-2", "windtunnel-3" ]

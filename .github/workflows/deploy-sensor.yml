@@ -1,10 +1,19 @@
 name: Sensor Update
 
 on:
+  # Manual only: rebuilding on every push was wearing out the Pi SD cards
   workflow_dispatch:
-  push:
-    branches:
-      - main
+    inputs:
+      target:
+        description: Which Pi to deploy
+        type: choice
+        default: all
+        options:
+          - all
+          - raspberrypi-1
+          - raspberrypi-2
+          - raspberrypi-3
+          - raspberrypi-4
 
 jobs:
   deploy:
@@ -38,6 +47,7 @@ jobs:
 
     steps:
       - name: Deploy sensor containers
+        if: inputs.target == 'all' || inputs.target == matrix.name
         uses: appleboy/ssh-action@master
         with:
           # Tailscale server
@@ -66,6 +76,9 @@ jobs:
 
             # Start containers
             docker compose --profile "${{ matrix.profile }}" up -d
+
+            # Remove old dangling images left behind by the rebuild
+            docker image prune -f
 
             # Watch sensor logs for 5 minutes
             timeout 5m docker compose logs -f ${{ matrix.logs }} || true
